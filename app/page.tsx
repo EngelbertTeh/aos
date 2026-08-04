@@ -105,7 +105,7 @@ export default function Home() {
           Sutta Study
         </h1>
         <p className="mt-2 text-sm leading-6 text-[#5d4937]">
-          Gather a group, read a long text in sequence, and let the host guide the flow.
+          Gather together, read long texts in sequence, and let the host guide the flow.
         </p>
       </div>
 

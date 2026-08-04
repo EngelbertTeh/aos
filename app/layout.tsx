@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Assembly of Sekkhas",
-  description: "A mobile-first real-time collaborative reading experience.",
+  description: "A mobile-friendly space for sutta study through shared reading in turns, in a calm and collective flow.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
