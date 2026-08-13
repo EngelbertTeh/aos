@@ -3,29 +3,33 @@ export function splitWords(
     participants: number
 ) {
     const safeText = typeof text === "string" ? text : "";
-    const normalized = safeText.replace(/\s+/g, " ").trim();
+
+    const normalized = safeText
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .trim();
 
     if (!normalized) {
         return Array.from({ length: participants }, () => "");
     }
 
-    const sentences = normalized
-        .split(/(?<=[.!?])\s+/)
-        .map((sentence) => sentence.trim())
-        .filter(Boolean);
+    const blocks = normalized
+        .split(/\n\s*\n+/)
+        .map((block) => block.replace(/[ \t]+$/gm, "").trim())
+        .filter((block) => block.length > 0);
 
-    if (sentences.length === 0) {
+    if (blocks.length === 0) {
         return Array.from({ length: participants }, () => "");
     }
 
-    const chunks: string[] = [];
-    const perParticipant = Math.max(1, Math.ceil(sentences.length / participants));
+    const chunks: string[] = Array.from({ length: participants }, () => "");
 
-    for (let i = 0; i < participants; i++) {
-        const start = i * perParticipant;
-        const end = start + perParticipant;
-        chunks.push(sentences.slice(start, end).join(" "));
-    }
+    blocks.forEach((block, index) => {
+        const targetIndex = index % participants;
+        chunks[targetIndex] = chunks[targetIndex]
+            ? `${chunks[targetIndex]}\n\n${block}`
+            : block;
+    });
 
     return chunks;
 }
