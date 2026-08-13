@@ -328,14 +328,14 @@ export default function SessionPage() {
                             <section
                                 key={section.user_id}
                                 className={`rounded-[22px] border p-6 shadow-sm transition-all duration-300 ${active
-                                    ? "border-[#b89b5d] bg-[#fffdf8]"
+                                    ? "border-[#d8cdb4] bg-[#fffdf8]"
                                     : lobby.paused
                                         ? "border-[#e6dcc9] bg-[#f8f2e8]"
                                         : "border-gray-200 bg-gray-50 opacity-40"
                                     }`}
                             >
 
-                                <div className="mb-5 flex items-center justify-between">
+                                <div className="mb-5 flex items-center justify-between gap-3">
 
                                     <h3
                                         className={`text-lg font-semibold ${active
@@ -357,10 +357,10 @@ export default function SessionPage() {
                                 </div>
 
                                 <p
-                                    className={`whitespace-pre-wrap text-[1.02rem] leading-8 tracking-[0.01em] ${active
-                                        ? "text-[#3f2f1f]"
+                                    className={`whitespace-pre-wrap text-[1.05rem] leading-[1.9] tracking-[0.01em] font-[Georgia,Times,serif] ${active
+                                        ? "text-[#2f241d]"
                                         : lobby.paused
-                                            ? "text-[#5d4937]"
+                                            ? "text-[#4d3d2f]"
                                             : "text-gray-500"
                                         }`}
                                 >

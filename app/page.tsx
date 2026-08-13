@@ -44,6 +44,68 @@ export default function Home() {
   }, [fetchLobbies, name]);
 
   useEffect(() => {
+    const channel = supabase
+      .channel("home-lobbies")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "lobbies",
+        },
+        (payload) => {
+          const nextLobby = payload.new as Lobby;
+
+          if (nextLobby.started) return;
+
+          setLobbies((prev) => {
+            if (prev.some((lobby) => lobby.id === nextLobby.id)) return prev;
+            if (new Date(nextLobby.expires_at).getTime() <= Date.now()) return prev;
+            return [nextLobby, ...prev];
+          });
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "lobbies",
+        },
+        (payload) => {
+          const nextLobby = payload.new as Lobby;
+
+          setLobbies((prev) => {
+            const filtered = prev.filter((lobby) => lobby.id !== nextLobby.id);
+
+            if (nextLobby.started) return filtered;
+            if (new Date(nextLobby.expires_at).getTime() <= Date.now()) return filtered;
+
+            return [nextLobby, ...filtered];
+          });
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "lobbies",
+        },
+        (payload) => {
+          const oldLobby = payload.old as { id: string };
+
+          setLobbies((prev) => prev.filter((lobby) => lobby.id !== oldLobby.id));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  useEffect(() => {
     const lobbyId = getStoredLobbyId();
 
     if (!lobbyId) return;
