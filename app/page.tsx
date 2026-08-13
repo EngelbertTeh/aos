@@ -18,6 +18,10 @@ import { generateName } from "@/lib/randomName";
 import type { Lobby } from "@/types/lobby";
 import { supabase } from "@/utils/supabase/client";
 
+type RealtimeLobby = Lobby & {
+  expires_at?: string;
+};
+
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState(() => getStoredNickname());
@@ -54,12 +58,13 @@ export default function Home() {
           table: "lobbies",
         },
         (payload) => {
-          const nextLobby = payload.new as Lobby;
+          const nextLobby = payload.new as RealtimeLobby;
 
           if (nextLobby.started) return;
 
           setLobbies((prev) => {
             if (prev.some((lobby) => lobby.id === nextLobby.id)) return prev;
+            if (!nextLobby.expires_at) return prev;
             if (new Date(nextLobby.expires_at).getTime() <= Date.now()) return prev;
             return [nextLobby, ...prev];
           });
@@ -73,12 +78,13 @@ export default function Home() {
           table: "lobbies",
         },
         (payload) => {
-          const nextLobby = payload.new as Lobby;
+          const nextLobby = payload.new as RealtimeLobby;
 
           setLobbies((prev) => {
             const filtered = prev.filter((lobby) => lobby.id !== nextLobby.id);
 
             if (nextLobby.started) return filtered;
+            if (!nextLobby.expires_at) return filtered;
             if (new Date(nextLobby.expires_at).getTime() <= Date.now()) return filtered;
 
             return [nextLobby, ...filtered];
