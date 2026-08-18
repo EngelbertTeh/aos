@@ -181,7 +181,7 @@ export default function Home() {
         Your nickname
       </label>
       <input
-        maxLength={15}
+        maxLength={22}
         value={name}
         onChange={(e) => {
           const next = e.target.value;
