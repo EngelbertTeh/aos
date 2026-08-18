@@ -166,57 +166,60 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-xl flex-col p-4 bg-[#f8f3e8] text-[#2f241d]">
-      <div className="mb-8 rounded-2xl border border-[#d8cdb4] bg-[#fffdf8] p-5 shadow-sm">
-        <p className="text-xs uppercase tracking-[0.3em] text-[#8a6b3d]">Assembly of Sekkhas</p>
-        <h1 className="mt-2 text-2xl font-semibold text-[#3f2f1f]">
-          Sutta Study
-        </h1>
-        <p className="mt-2 text-sm leading-6 text-[#5d4937]">
-          Gather together, read long texts in sequence, and let the host guide the flow.
-        </p>
+    <main className="mx-auto flex min-h-screen max-w-xl flex-col bg-[#f8f3e8] text-[#2f241d]">
+      <div className="px-4 pt-4">
+        <div className="mb-8 rounded-2xl border border-[#d8cdb4] bg-[#fffdf8] p-5 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.3em] text-[#8a6b3d]">Assembly of Sekkhas</p>
+          <h1 className="mt-2 text-2xl font-semibold text-[#3f2f1f]">
+            Sutta Study
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-[#5d4937]">
+            Gather together, read long texts in sequence, and let the host guide the flow.
+          </p>
+        </div>
+
+        <label className="mb-2 block text-sm font-semibold text-[#5d4937]">
+          Your nickname
+        </label>
+        <input
+          maxLength={22}
+          value={name}
+          onChange={(e) => {
+            const next = e.target.value;
+            setName(next);
+            setStoredNickname(next);
+          }}
+          className="w-full rounded-xl border border-[#d8cdb4] bg-[#fffdf8] p-4 text-[#2f241d] outline-none ring-0"
+        />
+
+        <button
+          type="button"
+          onClick={() => {
+            const nextName = generateName();
+            setName(nextName);
+            setStoredNickname(nextName);
+          }}
+          className="mt-3 self-start rounded-xl border border-[#d8cdb4] bg-[#fdf8ec] px-4 py-2 text-sm font-semibold text-[#5d4937]"
+        >
+          Random nickname
+        </button>
+
+        <button
+          onClick={() => setOpen(true)}
+          className="mt-6 mb-0 w-full rounded-xl bg-[#4c6b3b] px-4 py-3 font-semibold text-[#f8f3e8] shadow-sm"
+        >
+          Create Assembly
+        </button>
       </div>
 
-      <label className="mb-2 text-sm font-semibold text-[#5d4937]">
-        Your nickname
-      </label>
-      <input
-        maxLength={22}
-        value={name}
-        onChange={(e) => {
-          const next = e.target.value;
-          setName(next);
-          setStoredNickname(next);
-        }}
-        className="rounded-xl border border-[#d8cdb4] bg-[#fffdf8] p-4 text-[#2f241d] outline-none ring-0"
-      />
-
-      <button
-        type="button"
-        onClick={() => {
-          const nextName = generateName();
-          setName(nextName);
-          setStoredNickname(nextName);
-        }}
-        className="mt-3 self-start rounded-xl border border-[#d8cdb4] bg-[#fdf8ec] px-4 py-2 text-sm font-semibold text-[#5d4937]"
-      >
-        Random nickname
-      </button>
-
-      <button
-        onClick={() => setOpen(true)}
-        className="my-6 rounded-xl bg-[#4c6b3b] px-4 py-3 font-semibold text-[#f8f3e8] shadow-sm"
-      >
-        Create Assembly
-      </button>
-
-      <div className="space-y-4">
-        {lobbies.map((lobby) => (
-          <LobbyCard
-            key={lobby.id}
-            lobby={lobby}
-          />
-        ))}
+      <div className="mt-5 flex-1 w-full bg-black px-2.5 py-2.5">
+        <div className="space-y-1.5">
+          {lobbies.map((lobby) => (
+            <div key={lobby.id} className="rounded-2xl border border-[#d8cdb4] bg-[#fffdf8]">
+              <LobbyCard lobby={lobby} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <CreateLobbyModal
