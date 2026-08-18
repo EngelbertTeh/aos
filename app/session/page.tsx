@@ -199,8 +199,7 @@ export default function SessionPage() {
             .eq("id", lobby.id);
     }
 
-    async function endAssembly() {
-        if (!confirm("End assembly?")) return;
+    const destroyAssemblyForEveryone = useCallback(async () => {
         if (!lobby) return;
 
         await supabase
@@ -214,9 +213,32 @@ export default function SessionPage() {
             .eq("id", lobby.id);
 
         clearLobbyId();
+    }, [lobby]);
 
+    async function endAssembly() {
+        if (!confirm("End assembly?")) return;
+        if (!lobby) return;
+
+        await destroyAssemblyForEveryone();
         router.replace("/");
     }
+
+    useEffect(() => {
+        if (!isHost || !lobby) return;
+
+        const handlePageExit = () => {
+            void destroyAssemblyForEveryone();
+        };
+
+        window.addEventListener("beforeunload", handlePageExit);
+
+        return () => {
+            window.removeEventListener("beforeunload", handlePageExit);
+            if (isHost && lobby) {
+                void destroyAssemblyForEveryone();
+            }
+        };
+    }, [destroyAssemblyForEveryone, isHost, lobby]);
 
     //----------------------------------------------------------
     // Loading

@@ -275,8 +275,8 @@ export default function LobbyPage() {
         router.replace("/");
     }
 
-    async function handleExit() {
-        if (!confirm("Close this assembly?")) return;
+    const destroyLobbyForEveryone = useCallback(async () => {
+        if (!lobbyId) return;
 
         await supabase
             .from("participants")
@@ -289,9 +289,31 @@ export default function LobbyPage() {
             .eq("id", lobbyId);
 
         clearLobbyId();
+    }, [lobbyId]);
 
+    async function handleExit() {
+        if (!confirm("Close this assembly?")) return;
+
+        await destroyLobbyForEveryone();
         router.replace("/");
     }
+
+    useEffect(() => {
+        if (!isHost || !lobby) return;
+
+        const handlePageExit = () => {
+            void destroyLobbyForEveryone();
+        };
+
+        window.addEventListener("beforeunload", handlePageExit);
+
+        return () => {
+            window.removeEventListener("beforeunload", handlePageExit);
+            if (isHost && lobby) {
+                void destroyLobbyForEveryone();
+            }
+        };
+    }, [destroyLobbyForEveryone, isHost, lobby]);
 
     //-----------------------------------------------------
     // Loading
