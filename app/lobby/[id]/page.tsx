@@ -181,13 +181,44 @@ export default function LobbyPage() {
             .on(
                 "postgres_changes",
                 {
-                    event: "*",
+                    event: "INSERT",
                     schema: "public",
                     table: "participants",
                     filter: `lobby_id=eq.${lobbyId}`,
                 },
                 () => {
-                    loadParticipants();
+                    void loadParticipants();
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "participants",
+                    filter: `lobby_id=eq.${lobbyId}`,
+                },
+                () => {
+                    void loadParticipants();
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "DELETE",
+                    schema: "public",
+                    table: "participants",
+                    filter: `lobby_id=eq.${lobbyId}`,
+                },
+                (payload) => {
+                    const removedUserId = payload.old?.user_id as string | undefined;
+
+                    if (!removedUserId) {
+                        void loadParticipants();
+                        return;
+                    }
+
+                    setParticipants((prev) => prev.filter((participant) => participant.user_id !== removedUserId));
                 }
             )
             .subscribe();
