@@ -297,12 +297,16 @@ export default function SessionPage() {
 
                 <div className="sticky top-4 z-30 mt-6 rounded-xl border border-[#e6dcc9] bg-[#fffdf8] p-6 shadow-sm text-center">
 
-                    <h2 className="text-3xl font-bold text-[#5c3d20]">
-                        You are {currentUserNickname}
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#7b6553]">
+                        You are
+                    </p>
+
+                    <h2 className="mt-1 text-3xl font-semibold text-[#5c3d20]">
+                        {currentUserNickname}
                     </h2>
 
                     <p className="mt-2 text-sm text-[#6c5842]">
-                        Reader {lobby.current_index + 1} of {sections.length}
+                        &nbsp;
                     </p>
 
                 </div>
