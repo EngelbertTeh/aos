@@ -1,10 +1,10 @@
 "use client";
 
-import { clearLobbyId, getOrCreateUserId } from "@/lib/identity";
+import { clearLobbyId, getOrCreateUserId, getStoredNickname } from "@/lib/identity";
 import { splitWords } from "@/lib/splitWords";
 import { supabase } from "@/utils/supabase/client";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Lobby = {
     id: string;
@@ -39,6 +39,8 @@ export default function SessionPage() {
     const [sections, setSections] = useState<Section[]>([]);
 
     const [isHost, setIsHost] = useState(false);
+
+    const currentUserNickname = getStoredNickname();
 
     //----------------------------------------------------------
     // Load lobby
@@ -156,31 +158,6 @@ export default function SessionPage() {
     }, [buildSections, lobbyId, router]);
 
     //----------------------------------------------------------
-    // Current reader
-    //----------------------------------------------------------
-
-    const currentReader = useMemo(() => {
-        if (!lobby) return null;
-
-        const safeIndex = Math.max(
-            0,
-            Math.min(lobby.current_index, Math.max(sections.length - 1, 0))
-        );
-
-        const fallback = sections[safeIndex] ?? null;
-
-        if (fallback?.nickname) {
-            return fallback;
-        }
-
-        const fallbackName = lobby.participant_order?.[safeIndex]?.nickname || "Waiting for reader";
-        return {
-            user_id: lobby.participant_order?.[safeIndex]?.user_id || "",
-            nickname: fallbackName,
-            text: "",
-        } as Section;
-    }, [lobby, sections]);
-
     //----------------------------------------------------------
     // Host controls
     //----------------------------------------------------------
@@ -301,12 +278,8 @@ export default function SessionPage() {
 
                 <div className="sticky top-4 z-30 mt-6 rounded-xl border border-[#e6dcc9] bg-[#fffdf8] p-6 shadow-sm text-center">
 
-                    <p className="text-[#6c5842]">
-                        The floor belongs to
-                    </p>
-
-                    <h2 className="mt-2 text-3xl font-bold text-[#5c3d20]">
-                        {currentReader?.nickname || "Waiting for reader"}
+                    <h2 className="text-3xl font-bold text-[#5c3d20]">
+                        You are {currentUserNickname}
                     </h2>
 
                     <p className="mt-2 text-sm text-[#6c5842]">

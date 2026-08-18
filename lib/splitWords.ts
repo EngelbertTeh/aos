@@ -23,13 +23,13 @@ export function splitWords(
     }
 
     const chunks: string[] = Array.from({ length: participants }, () => "");
+    const size = Math.max(1, Math.ceil(blocks.length / participants));
 
-    blocks.forEach((block, index) => {
-        const targetIndex = index % participants;
-        chunks[targetIndex] = chunks[targetIndex]
-            ? `${chunks[targetIndex]}\n\n${block}`
-            : block;
-    });
+    for (let i = 0; i < participants; i++) {
+        const start = i * size;
+        const end = start + size;
+        chunks[i] = blocks.slice(start, end).join("\n\n");
+    }
 
     return chunks;
 }
