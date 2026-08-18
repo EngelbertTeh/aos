@@ -402,7 +402,7 @@ export default function LobbyPage() {
 
                         <button
                             onClick={handleLeaveLobby}
-                            className="mt-5 w-full rounded-lg border border-[#b77a61] bg-[#f6ede8] py-3 font-semibold text-[#5d3a2c] transition hover:bg-[#f1e3db]"
+                            className="mt-5 w-full rounded-lg bg-[#9b4f3a] py-3 font-semibold text-[#f8f3e8] transition hover:bg-[#874436]"
                         >
                             Exit Lobby
                         </button>
