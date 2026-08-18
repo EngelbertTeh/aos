@@ -212,18 +212,16 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="relative mt-5 flex-1 w-full overflow-hidden bg-[#6d8f68] px-2.5 py-2.5">
+      <div className="relative mt-5 flex-1 w-full overflow-hidden bg-[#f8f3e8] px-2.5 py-2.5">
         <div
-          className="absolute inset-0 opacity-80"
+          className="absolute inset-0"
           style={{
             backgroundImage: "url('/favicon.ico')",
-            backgroundSize: 'contain',
+            backgroundSize: '100% 100%',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: '#6d8f68',
           }}
         />
-        <div className="absolute inset-0 bg-[#6d8f68]/55" />
         <div className="relative space-y-1.5">
           {lobbies.map((lobby) => (
             <div key={lobby.id} className="rounded-2xl border border-[#d8cdb4] bg-[#fffdf8]">
