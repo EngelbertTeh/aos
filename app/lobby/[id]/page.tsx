@@ -181,7 +181,31 @@ export default function LobbyPage() {
             .on(
                 "postgres_changes",
                 {
-                    event: "*",
+                    event: "INSERT",
+                    schema: "public",
+                    table: "participants",
+                    filter: `lobby_id=eq.${lobbyId}`,
+                },
+                () => {
+                    void loadParticipants();
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "participants",
+                    filter: `lobby_id=eq.${lobbyId}`,
+                },
+                () => {
+                    void loadParticipants();
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "DELETE",
                     schema: "public",
                     table: "participants",
                     filter: `lobby_id=eq.${lobbyId}`,
@@ -316,19 +340,8 @@ export default function LobbyPage() {
         router.replace("/");
     }
 
-    useEffect(() => {
-        if (!isHost || !lobby) return;
-
-        const handlePageExit = () => {
-            void destroyLobbyForEveryone();
-        };
-
-        window.addEventListener("beforeunload", handlePageExit);
-
-        return () => {
-            window.removeEventListener("beforeunload", handlePageExit);
-        };
-    }, [destroyLobbyForEveryone, isHost, lobby]);
+    // Host refreshes and normal navigation should not destroy the lobby.
+    // The host must explicitly close the assembly using the exit button.
 
     //-----------------------------------------------------
     // Loading
