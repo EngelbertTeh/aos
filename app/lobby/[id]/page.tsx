@@ -40,6 +40,8 @@ export default function LobbyPage() {
 
     const [isHost, setIsHost] = useState(false);
 
+    const currentUserId = getOrCreateUserId();
+
     //-----------------------------------------------------
     // Load lobby
     //-----------------------------------------------------
@@ -260,6 +262,19 @@ export default function LobbyPage() {
     // Exit
     //-----------------------------------------------------
 
+    async function handleLeaveLobby() {
+        if (!confirm("Leave this lobby?")) return;
+
+        await supabase
+            .from("participants")
+            .delete()
+            .eq("lobby_id", lobbyId)
+            .eq("user_id", currentUserId);
+
+        clearLobbyId();
+        router.replace("/");
+    }
+
     async function handleExit() {
         if (!confirm("Close this assembly?")) return;
 
@@ -339,6 +354,8 @@ export default function LobbyPage() {
                         <ul className="space-y-3">
                             {participants.map((participant) => {
                                 const nickname = participant.users[0]?.nickname || participant.user_id;
+                                const isCurrentUser = participant.user_id === currentUserId;
+                                const isHostUser = participant.user_id === lobby.host_id;
 
                                 return (
                                     <li
@@ -349,11 +366,19 @@ export default function LobbyPage() {
                                             {nickname}
                                         </span>
 
-                                        {participant.user_id === lobby.host_id && (
-                                            <span className="rounded-full bg-[#e8f1e2] px-3 py-1 text-xs font-semibold text-[#4c6b3b]">
-                                                Host
-                                            </span>
-                                        )}
+                                        <div className="flex items-center gap-2">
+                                            {isCurrentUser && (
+                                                <span className="rounded-full bg-[#efe2c8] px-3 py-1 text-xs font-semibold text-[#6b4729]">
+                                                    You
+                                                </span>
+                                            )}
+
+                                            {isHostUser && (
+                                                <span className="rounded-full bg-[#e8f1e2] px-3 py-1 text-xs font-semibold text-[#4c6b3b]">
+                                                    Host
+                                                </span>
+                                            )}
+                                        </div>
                                     </li>
                                 );
                             })}
@@ -374,6 +399,13 @@ export default function LobbyPage() {
                         <p className="mt-2 text-sm text-[#5d4937]">
                             The reading session will start automatically.
                         </p>
+
+                        <button
+                            onClick={handleLeaveLobby}
+                            className="mt-5 w-full rounded-lg border border-[#b77a61] bg-[#f6ede8] py-3 font-semibold text-[#5d3a2c] transition hover:bg-[#f1e3db]"
+                        >
+                            Exit Lobby
+                        </button>
 
                     </div>
                 )}
