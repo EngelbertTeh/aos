@@ -322,9 +322,6 @@ export default function LobbyPage() {
 
         return () => {
             window.removeEventListener("beforeunload", handlePageExit);
-            if (isHost && lobby) {
-                void destroyLobbyForEveryone();
-            }
         };
     }, [destroyLobbyForEveryone, isHost, lobby]);
 

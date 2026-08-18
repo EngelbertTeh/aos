@@ -234,9 +234,6 @@ export default function SessionPage() {
 
         return () => {
             window.removeEventListener("beforeunload", handlePageExit);
-            if (isHost && lobby) {
-                void destroyAssemblyForEveryone();
-            }
         };
     }, [destroyAssemblyForEveryone, isHost, lobby]);
 
