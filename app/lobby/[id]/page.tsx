@@ -220,6 +220,19 @@ export default function LobbyPage() {
                     }
                 }
             )
+            .on(
+                "postgres_changes",
+                {
+                    event: "DELETE",
+                    schema: "public",
+                    table: "lobbies",
+                    filter: `id=eq.${lobbyId}`,
+                },
+                () => {
+                    clearLobbyId();
+                    router.replace("/");
+                }
+            )
             .subscribe();
 
         return () => {
