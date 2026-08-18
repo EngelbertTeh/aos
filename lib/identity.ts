@@ -39,7 +39,7 @@ export function getStoredNickname() {
 }
 
 export function setStoredNickname(nickname: string) {
-    const trimmed = nickname.trim().slice(0, 15);
+    const trimmed = nickname.trim().slice(0, 22);
     if (!trimmed) return;
     writeStorage(NICKNAME_KEY, trimmed);
 }
@@ -69,7 +69,7 @@ export function getStoredLobbyId() {
 export async function ensureUserRecord(nickname: string) {
     const userId = getOrCreateUserId();
     const sessionId = getOrCreateSessionId();
-    const trimmed = nickname.trim().slice(0, 15) || getStoredNickname();
+    const trimmed = nickname.trim().slice(0, 22) || getStoredNickname();
 
     if (!readStorage(NICKNAME_KEY)) {
         writeStorage(NICKNAME_KEY, trimmed);
