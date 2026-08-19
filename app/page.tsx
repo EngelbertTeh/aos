@@ -39,13 +39,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    void fetchLobbies();
+  }, [fetchLobbies]);
+
+  useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      void fetchLobbies();
       void ensureUserRecord(name);
-    }, 0);
+    }, 400);
 
     return () => window.clearTimeout(timeoutId);
-  }, [fetchLobbies, name]);
+  }, [name]);
 
   useEffect(() => {
     const channel = supabase
