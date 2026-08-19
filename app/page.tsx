@@ -39,13 +39,17 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    void fetchLobbies();
+    const timeoutId = window.setTimeout(() => {
+      void fetchLobbies();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [fetchLobbies]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       void ensureUserRecord(name);
-    }, 400);
+    }, 1000);
 
     return () => window.clearTimeout(timeoutId);
   }, [name]);
